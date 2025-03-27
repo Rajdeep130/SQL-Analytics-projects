@@ -1,16 +1,47 @@
 
-# 📊 SQL Project: [Project Name]
+# 🛒 Retail Business Sales Analysis Project
 
-## 📝 Overview
-Briefly describe your project:
-- What is the project about?
-- What problem does it solve?
-- What datasets are used?
-- What insights are derived?
+# 📖 Overview
+This project focuses on exploring and analyzing a Retail Sales Database containing customers, products, and sales data using SQL. The goal is to perform data exploration, business metrics calculation, segmentation, and ranking analysis to derive actionable business insights.
+
+### The analysis covers:
+
+- Data Exploration (Tables, Columns, and Dimensions)
+- Customer Demographics and Segmentation
+- Product Category Insights
+- Sales Trends (First and Last Order Dates)
+- Key Business Metrics (Revenue, Orders, Products, Customers)
+- Magnitude Analysis (By Country, Gender, Category)
+- Ranking Analysis (Top/Bottom Products and Customers)
+- Pre-built SQL report generation with UNION ALL
+- The results of this project will help businesses understand customer behavior, product performance, and revenue generation trends.
 
 ## 📂 Project Structure
-Describe the folder structure if applicable:
-
+   ```
+Retail-Sales-SQL-Analysis/
+│
+├── README.md                        # Project Overview and Structure
+├── SQL/
+│   ├── 01_data_exploration.sql      # Explore tables, columns, and dimensions
+│   ├── 02_dimension_exploration.sql # Customer countries, product categories
+│   ├── 03_date_exploration.sql      # First/Last order, order range, age insights
+│   ├── 04_key_metrics.sql           # Total Sales, Orders, Products, Customers
+│   ├── 05_report_summary.sql        # Pre-built summary report using UNION ALL
+│   ├── 06_magnitude_analysis.sql    # Segmentation by country, gender, category
+│   ├── 07_ranking_analysis.sql      # Top/Bottom products and customers analysis
+│
+├── Images/
+│   ├── data_exploration.png
+│   ├── dimension_exploration.png
+│   ├── date_exploration.png
+│   ├── key_metrics.png
+│   ├── magnitude_analysis.png
+│   ├── ranking_analysis.png
+│
+└── Dashboard/
+    ├── Insights.pptx                 # Optional PowerPoint for business storytelling
+    └── dashboard_sample.png          # Optional visualization preview
+  ```
 ## 🚀 SQL Queries & Analysis
 Describe the key SQL operations performed:
 ## 1. Data Exploration : 
@@ -269,3 +300,104 @@ ORDER BY Total_sold_items ASC
 ![image](https://github.com/user-attachments/assets/f6dc1276-1509-4212-ae78-810b18fb374b)
 ![image](https://github.com/user-attachments/assets/0e2cd809-446b-4afe-abe7-ed30e2a4093f)
 
+## Ranking_Analysis
+**Which 5 Products generate the highest revene**
+ ```sql
+SELECT TOP 5
+c.product_name,
+sum(f.sales_amount) AS Total_revenue
+FROM 
+[gold.fact_sales] f
+LEFT JOIN [gold.dim_products] c ON f.product_key = c.product_key
+GROUP BY c.product_name
+ORDER BY Total_revenue DESC
+
+-- Using Window Function
+
+SELECT *
+FROM
+(SELECT 
+c.product_name,
+sum(f.sales_amount) AS Total_revenue,
+RANK() OVER(ORDER BY SUM(f.sales_amount) DESC) AS rank_products
+FROM 
+[gold.fact_sales] f
+LEFT JOIN [gold.dim_products] c ON f.product_key = c.product_key
+GROUP BY c.product_name) t
+WHERE t.rank_products<=5
+ ```
+![image](https://github.com/user-attachments/assets/4eda40b5-90f9-4b4e-8619-03ecd21dd5c6)
+
+**What are the 5 worst-perfoming products in terms of sales**
+ ```sql
+SELECT TOP 5
+c.product_name,
+sum(f.sales_amount) AS Total_revenue
+FROM 
+[gold.fact_sales] f
+LEFT JOIN [gold.dim_products] c ON f.product_key = c.product_key
+GROUP BY c.product_name
+ORDER BY Total_revenue ASC
+
+-- Using Window Function
+
+SELECT product_name, Total_revenue  
+FROM (  
+    SELECT  
+        c.product_name,  
+        SUM(f.sales_amount) AS Total_revenue,  
+        RANK() OVER (ORDER BY SUM(f.sales_amount) ASC) AS rank_products  
+    FROM [gold.fact_sales] f  
+    LEFT JOIN [gold.dim_products] c  
+        ON f.product_key = c.product_key  
+    GROUP BY c.product_name  
+) t  
+WHERE rank_products <= 5  
+ ```
+![image](https://github.com/user-attachments/assets/73da7379-670c-44ff-8ebc-55abffc32ec7)
+
+**Find the Top 10 Customers Who have Generated the highest Revenue**
+ ```sql
+SELECT TOP 10
+c.customer_key,
+c.first_name,
+c.last_name,
+sum(f.sales_amount) AS Total_Revenue
+FROM 
+[gold.fact_sales] f
+LEFT JOIN [gold.dim_customers] c ON f.customer_key = c.customer_key
+GROUP BY c.customer_key, c.first_name, c.last_name
+ORDER BY Total_Revenue desc
+ ```
+![image](https://github.com/user-attachments/assets/06f1645a-c094-4519-a327-d94ecdb899c8)
+
+**The 3 Customers with the Fewest orders placed**
+
+ ```sql
+SELECT TOP 3
+c.customer_key,
+c.first_name,
+c.last_name,
+COUNT(DISTINCT f.order_number) AS Total_order
+FROM 
+[gold.fact_sales] f
+LEFT JOIN [gold.dim_customers] c ON f.customer_key = c.customer_key
+GROUP BY c.customer_key, c.first_name, c.last_name
+ORDER BY Total_order ASC
+
+-- Using Window Function
+
+SELECT *
+FROM
+(SELECT 
+    c.customer_key, 
+    c.first_name, 
+    c.last_name, 
+    COUNT(f.order_number) AS orders, 
+    DENSE_RANK() OVER(ORDER BY COUNT(f.order_number) ASC) AS total_order_rank
+FROM [gold.fact_sales] f
+LEFT JOIN [gold.dim_customers] c 
+    ON f.customer_key = c.customer_key
+GROUP BY c.customer_key, c.first_name, c.last_name)t
+WHERE t.total_order_rank<=3
+ ```
