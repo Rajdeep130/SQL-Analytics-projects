@@ -401,3 +401,177 @@ LEFT JOIN [gold.dim_customers] c
 GROUP BY c.customer_key, c.first_name, c.last_name)t
 WHERE t.total_order_rank<=3
  ```
+
+## Advance Analytics
+
+**Changes Over time Analysis: Analyze Sales Performance Over Time**
+
+ ```sql
+
+SELECT 
+YEAR(order_date) AS order_year,
+sum(sales_amount) AS total_sales,
+COUNT(DISTINCT customer_key) AS total_customers,
+SUM(quantity) AS total_quantity 
+from [gold.fact_sales]
+WHERE order_date IS NOT NULL
+GROUP BY YEAR(order_date)
+ORDER BY YEAR(order_date) DESC
+ ```
+![image](https://github.com/user-attachments/assets/d0020708-5582-4657-a8d6-341b144498aa)
+
+ **A high_level overview insights that hleps with strategic decision-making.**
+
+ ```sql
+SELECT 
+MONTH(order_date) AS order_month,
+sum(sales_amount) AS total_sales,
+COUNT(DISTINCT customer_key) AS total_customers,
+SUM(quantity) AS total_quantity 
+from [gold.fact_sales]
+WHERE order_date IS NOT NULL
+GROUP BY MONTH(order_date)
+ORDER BY MONTH(order_date) DESC
+ ```
+ ![image](https://github.com/user-attachments/assets/bb8c0e87-f217-48f0-a8b0-656e92b19ba8)
+
+ ```sql
+ SELECT 
+DATETRUNC(month, order_date) AS order_month,
+sum(sales_amount) AS total_sales,
+COUNT(DISTINCT customer_key) AS total_customers,
+SUM(quantity) AS total_quantity 
+from [gold.fact_sales]
+WHERE order_date IS NOT NULL
+GROUP BY DATETRUNC(month, order_date)
+ORDER BY DATETRUNC(month, order_date)
+ ```
+-- one thing you will notice here that output will have sorted date here 
+-- beacuse output is Date not string.
+![image](https://github.com/user-attachments/assets/7d735b10-c2a5-4b50-8286-d21d23aa6503)
+
+ ```sql
+SELECT
+FORMAT(order_date, 'yyyy-MMM') AS order_date,
+SUM(sales_amount) as total_sales,
+COUNT(DISTINCT customer_key) AS total_customers,
+SUM(quantity) AS total_quantity
+FROM [gold.fact_sales]
+WHERE order_date IS NOT NULL 
+GROUP BY FORMAT(order_date,'yyyy-MMM')
+ORDER BY FORMAT(order_date,'yyyy-MMM');
+ ```
+-- If you look into the output you will found result is 
+-- not sorted accounding to order date 
+-- beacuse order_date is in string format
+
+## Cumulative Analysis
+**Purpose:**
+
+    - To calculate running totals or moving averages for key metrics.
+    - To track performance over time cumulatively.
+    - Useful for growth analysis or identifying long-term trends.
+
+**Calculate the total sales per month and the running total of sales over time.**
+ ```sql
+-- First Create subquery like this then go for cumulative total
+
+SELECT 
+DATETRUNC(month, order_date) AS order_date,
+SUM(sales_amount) AS total_sales
+FROM [gold.fact_sales]
+WHERE order_date IS NOT NULL
+GROUP BY DATETRUNC(month, order_date)
+ORDER BY DATETRUNC(month, order_date)
+ ```
+ ```sql
+
+SELECT 
+order_date,
+total_sales,
+SUM(total_sales) OVER(PARTITION BY order_date ORDER BY order_date) AS running_total_sales
+FROM 
+(SELECT 
+DATETRUNC(month, order_date) AS order_date,
+SUM(sales_amount) AS total_sales
+FROM [gold.fact_sales]
+WHERE order_date IS NOT NULL
+GROUP BY DATETRUNC(month, order_date)
+)t
+ ```
+![image](https://github.com/user-attachments/assets/a4b102f5-788f-4aee-ae24-e7b7e1afd24c)
+
+
+**If you want to look for moving Avg also**
+ ```sql
+SELECT 
+order_date,
+total_sales,
+SUM(total_sales) OVER(ORDER BY order_date) AS running_total_sales,
+AVG(avg_price) OVER(ORDER BY order_date) AS moving_average_price
+FROM 
+(SELECT 
+DATETRUNC(YEAR, order_date) AS order_date,
+SUM(sales_amount) AS total_sales,
+AVG(price) AS avg_price
+FROM [gold.fact_sales]
+WHERE order_date IS NOT NULL
+GROUP BY DATETRUNC(YEAR, order_date)
+)t
+ ```
+
+## Performance Analysis (Year-over-Year, Month-over-Month)
+**Purpose:**
+
+    - To measure the performance of products, customers, or regions over time.
+    - For benchmarking and identifying high-performing entities.
+    - To track yearly trends and growth.
+
+**SQL Functions Used:**
+
+    - LAG(): Accesses data from previous rows.
+    - AVG() OVER(): Computes average values within partitions.
+    - CASE: Defines conditional logic for trend analysis.
+
+** Analyze the yearly performance of products by comparing their sales 
+to both the average sales performance of the product and the previous year's sales**
+
+-- Year over Year Analysis
+ ```sql
+WITH yearly_product_sales AS
+(SELECT 
+	YEAR(f.order_date) AS order_year,
+	p.product_name,
+	SUM(f.sales_amount) AS current_sales
+FROM
+	[gold.fact_sales] f
+LEFT JOIN
+	[gold.dim_products] p ON f.product_key = p.product_key
+WHERE f.order_date IS NOT NULL
+GROUP BY YEAR(f.order_date),
+		 p.product_name)
+
+SELECT
+	order_year,
+	product_name,
+	current_sales,
+	AVG(current_sales) OVER(PARTITION BY product_name) AS avg_sales,
+	current_sales - AVG(current_sales) OVER(PARTITION BY product_name) AS diff_avg,
+	CASE 
+		WHEN current_sales - AVG(current_sales) OVER(PARTITION BY product_name) >0 THEN 'Above Avg'
+		WHEN current_sales- AVG(current_sales) OVER(PARTITION BY product_name) <0 THEN 'Below Avg'
+		ELSE 'Avg'
+	END AS avg_change,
+-- Year-over-Year Analysis
+	LAG(current_sales) OVER(PARTITION BY product_name ORDER BY order_year) AS py_sales,
+	current_sales - LAG(current_sales) OVER(PARTITION BY product_name ORDER BY order_year) AS diff_py,
+	CASE 
+		WHEN current_sales - LAG(current_sales) OVER(PARTITION BY product_name ORDER BY order_year) >0 THEN 'Increase'
+		WHEN current_sales - LAG(current_sales) OVER(PARTITION BY product_name ORDER BY order_year) <0 THEN 'Decrease'
+		ELSE 'No Change'
+		END AS py_change
+FROM
+	yearly_product_sales
+ORDER BY product_name, order_year;
+ ```
+![image](https://github.com/user-attachments/assets/2d5eef7d-e0bb-43bc-a83d-53d80d229404)
