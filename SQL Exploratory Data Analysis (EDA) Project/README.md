@@ -1,20 +1,65 @@
 
 # 🛒 Retail Business Sales Analysis Project
 
-# 📖 Overview
-This project focuses on exploring and analyzing a Retail Sales Database containing customers, products, and sales data using SQL. The goal is to perform data exploration, business metrics calculation, segmentation, and ranking analysis to derive actionable business insights.
+# Retail Sales Data Analysis
 
-### The analysis covers:
+## 📖 Overview  
+This project focuses on exploring and analyzing a **Retail Sales Database** containing customer, product, and sales data using **SQL**.  
+The goal is to perform **data exploration, business metrics calculation, segmentation, and advanced analytics** to derive actionable business insights.  
 
-- Data Exploration (Tables, Columns, and Dimensions)
-- Customer Demographics and Segmentation
-- Product Category Insights
-- Sales Trends (First and Last Order Dates)
-- Key Business Metrics (Revenue, Orders, Products, Customers)
-- Magnitude Analysis (By Country, Gender, Category)
-- Ranking Analysis (Top/Bottom Products and Customers)
-- Pre-built SQL report generation with UNION ALL
-- The results of this project will help businesses understand customer behavior, product performance, and revenue generation trends.
+## 🔍 Analysis Scope  
+
+### 1️⃣ Data Exploration  
+- Examining **tables, columns, and dimensions** to understand the database structure.  
+
+### 2️⃣ Dimension Analysis  
+- Analyzing **customer demographics** and **product categories** for segmentation.  
+
+### 3️⃣ Date Exploration  
+- Identifying **first and last order dates**, **sales timespan**, and **customer age insights**.  
+
+### 4️⃣ Key Business Metrics  
+- Calculating **revenue, orders, products, customers**, and other core **KPIs**.  
+
+### 5️⃣ Magnitude Analysis  
+- Segmenting data by **country, gender, and category** to understand market distribution.  
+
+### 6️⃣ Ranking Analysis  
+- Identifying **top/bottom performing products** and **most valuable customers**.  
+
+### 7️⃣ Time Series Analysis  
+- Analyzing **sales performance** over years and months.  
+
+### 8️⃣ Cumulative Analysis  
+- Creating **running totals** and **moving averages** for trend identification.  
+
+### 9️⃣ Year-over-Year Comparison  
+- Tracking **product and sales performance growth** over time.  
+
+### 🔟 Segmentation Analysis  
+- Categorizing **products by cost range** and **customers by spending behavior**.  
+
+### 1️⃣1️⃣ Part-to-Whole Analysis  
+- Understanding **category contribution** to overall sales.  
+
+### 1️⃣2️⃣ Consolidated Reports  
+- Creating **comprehensive customer and product performance views**.  
+
+---
+
+## 📊 Business Impact  
+The results of this project provide **business stakeholders** with a deep understanding of:  
+✅ **Customer behavior**  
+✅ **Product performance**  
+✅ **Revenue generation trends**  
+
+This enables **data-driven strategic decision-making** and helps optimize **business growth**.  
+
+---
+
+### 🚀 Technologies Used  
+- **SQL** for querying and analysis  
+
 
 ## 📂 Project Structure
    ```
@@ -29,18 +74,32 @@ Retail-Sales-SQL-Analysis/
 │   ├── 05_report_summary.sql        # Pre-built summary report using UNION ALL
 │   ├── 06_magnitude_analysis.sql    # Segmentation by country, gender, category
 │   ├── 07_ranking_analysis.sql      # Top/Bottom products and customers analysis
+│   ├── 08_time_series_analysis.sql  # Sales performance over time (year/month)
+│   ├── 09_cumulative_analysis.sql   # Running totals and moving averages
+│   ├── 10_yoy_comparison.sql        # Year-over-Year performance analysis
+│   ├── 11_segmentation_analysis.sql # Cost range and customer segmentation
+│   ├── 12_part_to_whole_analysis.sql # Category contribution to overall sales
+│   ├── 13_customer_report.sql       # Consolidated customer metrics and report
+│   ├── 14_product_report.sql        # Consolidated product metrics and report
 │
 ├── Images/
-│   ├── data_exploration.png
-│   ├── dimension_exploration.png
-│   ├── date_exploration.png
-│   ├── key_metrics.png
-│   ├── magnitude_analysis.png
-│   ├── ranking_analysis.png
+│   ├── data_exploration.png         # Screenshots of exploration results
+│   ├── dimension_exploration.png    # Visualizations of dimension analysis
+│   ├── date_exploration.png         # Date range analysis results
+│   ├── key_metrics.png              # Business KPI screenshots
+│   ├── magnitude_analysis.png       # Segmentation analysis visualizations
+│   ├── ranking_analysis.png         # Top/Bottom rankings visualization
+│   ├── time_series_analysis.png     # Monthly/Yearly performance charts
+│   ├── cumulative_analysis.png      # Running totals visualizations
+│   ├── yoy_comparison.png           # Year-over-Year comparison charts
+│   ├── segmentation_analysis.png    # Customer and product segmentation visuals
+│   ├── part_to_whole_analysis.png   # Category contribution charts
+│   ├── customer_report.png          # Customer report output
+│   ├── product_report.png           # Product report output
 │
 └── Dashboard/
-    ├── Insights.pptx                 # Optional PowerPoint for business storytelling
-    └── dashboard_sample.png          # Optional visualization preview
+    ├── Insights.pptx                # PowerPoint for business storytelling
+    └── dashboard_sample.png         # Visualization preview
   ```
 ## 🚀 SQL Queries & Analysis
 Describe the key SQL operations performed:
@@ -520,23 +579,29 @@ GROUP BY DATETRUNC(YEAR, order_date)
 )t
  ```
 
-## Performance Analysis (Year-over-Year, Month-over-Month)
-**Purpose:**
+# Performance Analysis (Year-over-Year, Month-over-Month)
 
-    - To measure the performance of products, customers, or regions over time.
-    - For benchmarking and identifying high-performing entities.
-    - To track yearly trends and growth.
+## Purpose
+- To measure the performance of **products, customers, or regions** over time.  
+- Used for **benchmarking** and identifying **high-performing entities**.  
+- Helps track **yearly trends and growth**.  
 
-**SQL Functions Used:**
+## SQL Functions Used  
+- **LAG()**: Accesses data from previous rows for trend comparison.  
+- **AVG() OVER()**: Computes average values within partitions for trend analysis.  
+- **CASE**: Defines conditional logic to categorize performance trends.  
 
-    - LAG(): Accesses data from previous rows.
-    - AVG() OVER(): Computes average values within partitions.
-    - CASE: Defines conditional logic for trend analysis.
+---
+
+### 📌 Notes  
+- Useful for **financial analysis, sales forecasting, and operational performance tracking**.  
+- Can be implemented in **SQL queries, Power BI, and business dashboards** to analyze trends effectively.  
+
 
 ** Analyze the yearly performance of products by comparing their sales 
 to both the average sales performance of the product and the previous year's sales**
 
--- Year over Year Analysis
+**Year over Year Analysis**
  ```sql
 WITH yearly_product_sales AS
 (SELECT 
@@ -575,3 +640,393 @@ FROM
 ORDER BY product_name, order_year;
  ```
 ![image](https://github.com/user-attachments/assets/2d5eef7d-e0bb-43bc-a83d-53d80d229404)
+
+
+
+# Data Segmentation Analysis
+
+## Purpose
+- To group data into meaningful categories for targeted insights.  
+- Used for **customer segmentation, product categorization, or regional analysis**.  
+
+## SQL Functions Used  
+- **CASE**: Defines custom segmentation logic.  
+- **GROUP BY**: Groups data into segments for analysis.  
+
+---
+
+### 📌 Notes  
+- This analysis helps in **identifying trends, optimizing marketing strategies, and improving decision-making**.  
+- Can be implemented in **SQL queries, Power BI dashboards, or business intelligence reports**.  
+
+ ```sql
+WITH cost_range_h AS
+(SELECT
+	product_key,
+	product_name,
+	cost,
+CASE 
+	WHEN cost<100 THEN 'Below 100'
+	WHEN cost BETWEEN 100 AND 500 THEN 'Below 100'
+	WHEN cost BETWEEN 500 AND 1000 THEN '500-1000'
+	ELSE 'Above 1000'
+END AS cost_range
+FROM
+	[gold.dim_products]
+	)
+SELECT 
+cost_range,
+COUNT(product_key) AS total_products,
+SUM(COUNT(product_key)) OVER() AS overall_product,
+CONCAT((COUNT(product_key)*100)/SUM(COUNT(product_key)) OVER(),'%') AS product_percentage
+FROM
+cost_range_h
+GROUP BY cost_range
+order by total_products desc
+ ```
+![image](https://github.com/user-attachments/assets/2dd3ed34-4f6c-4153-a72d-76b2373adbe0)
+
+
+# Customer Segmentation
+
+## Purpose
+This segmentation groups customers based on their spending behavior and lifecycle to analyze trends and customer value.
+
+## Segmentation Criteria  
+- **VIP**: Customers with at least **12 months of history** and **spending more than 5000**.  
+- **Regular**: Customers with at least **12 months of history** but **spending 5000 or less**.  
+- **New**: Customers with a **lifespan of less than 12 months**.  
+
+## Metrics  
+- Calculates the **total number of customers** in each segment.  
+- Helps in **customer retention strategies** and **marketing personalization**.  
+
+---
+
+### 📌 Notes
+- This segmentation can be used in **SQL queries** or **Power BI dashboards** to track customer behavior.  
+- Useful for **loyalty program analysis**, **targeted marketing**, and **business growth insights**.  
+
+
+ ```sql
+ WITH customer_spending 
+AS
+(SELECT
+c.customer_key,
+SUM(f.sales_amount) AS total_spending,
+MIN(order_date) AS first_order,
+MAX(order_date) AS last_order,										-- this is the intermediate Result based 
+DATEDIFF(month, MIN(order_date), MAX(order_date)) AS lifespan		-- on this final result will come
+FROM
+	[gold.fact_sales] f
+LEFT JOIN
+	[gold.dim_customers] c
+	ON f.customer_key = c.customer_key
+GROUP BY c.customer_key)
+
+	SELECT
+	CASE WHEN lifespan > 12 AND total_spending > 5000 THEN 'VIP'
+			  WHEN lifespan >=12 AND  total_spending<= 5000 THEN 'Regular'
+			  ELSE 'New'
+			END customer_segment,
+	COUNT(customer_key) AS total_customers
+	FROM 
+		customer_spending
+		GROUP BY CASE WHEN lifespan > 12 AND total_spending > 5000 THEN 'VIP'
+			  WHEN lifespan >=12 AND  total_spending<= 5000 THEN 'Regular'
+			  ELSE 'New'
+			END
+	ORDER BY COUNT(customer_key) DESC
+
+ ```
+![image](https://github.com/user-attachments/assets/8745be00-4880-45e1-b1ec-a9a3f8f7abbe)
+# Part-to-Whole Analysis
+
+## Purpose
+- Compare performance or metrics across different dimensions or time periods.  
+- Evaluate differences between categories.  
+- Useful for **A/B testing**, **regional comparisons**, and **trend analysis**.  
+
+---
+
+### 📌 Notes
+- Ideal for **business analytics projects**, especially when analyzing customer behavior or product performance.  
+- Can be integrated into **Power BI** dashboards or used for SQL-based reporting.  
+** Which categories contribute the most to overall sales?
+ ```sql
+	WITH category_sales AS
+	(SELECT
+		p.category,
+		SUM(f.sales_amount) AS total_sales
+		FROM
+			[gold.fact_sales] f
+	LEFT JOIN
+		 [gold.dim_products] p ON p.product_key = f.product_key
+	GROUP BY p.category)
+
+	SELECT category,
+			total_sales,
+			SUM(total_sales) OVER() AS overall_sales,
+			ROUND((CAST(total_sales AS FLOAT )/ sum(total_sales) OVER() )*100,2) percentage_of
+		FROM		
+			category_sales
+		order by total_sales desc;
+ ```
+![image](https://github.com/user-attachments/assets/9dca57ae-b60c-41de-8cdf-cc5d38d6cd1f)
+
+
+
+# Customer Report
+
+## Purpose
+This report consolidates key customer metrics and behaviors.
+
+## Highlights
+1. **Data Collection**  
+   - Gathers essential fields such as names, ages, and transaction details.
+
+2. **Customer Segmentation**  
+   - Categorizes customers into **VIP, Regular, and New** segments.  
+   - Groups customers by age.
+
+3. **Customer-Level Metrics**  
+   - **Total Orders**: Count of all transactions.  
+   - **Total Sales**: Sum of all purchases.  
+   - **Total Quantity Purchased**: Sum of all items bought.  
+   - **Total Products**: Unique products purchased.  
+   - **Lifespan**: Duration of customer activity (in months).
+
+4. **Key Performance Indicators (KPIs)**  
+   - **Recency**: Months since the last order.  
+   - **Average Order Value**: Total sales divided by total orders.  
+   - **Average Monthly Spend**: Total sales divided by customer lifespan.  
+
+---
+
+### 📌 Notes
+- The report is structured for easy integration with SQL queries and data analysis workflows.
+- Designed to enhance customer insights and drive strategic business decisions.
+===============================================================================
+
+ ```sql
+- Create Report: gold.report_customers
+-- =============================================================================
+CREATE SCHEMA gold;
+
+IF OBJECT_ID('gold.report_customers', 'V') IS NOT NULL
+    DROP VIEW gold.report_customers;
+GO
+
+CREATE VIEW gold.report_customers AS
+/*---------------------------------------------------------------------------
+1. Base Query: Retrives core columns from tables
+---------------------------------------------------------------------------------*/
+WITH base_query AS
+(SELECT
+f.order_number,
+f.product_key,
+f.order_date,
+f.sales_amount,
+f.quantity,
+c.customer_key,
+c.customer_number,
+c.first_name,
+c.last_name,
+CONCAT(c.first_name, ' ', c.last_name) AS customer_name,
+c.birthdate,
+DATEDIFF(YEAR, c.birthdate,GETDATE()) age
+FROM
+	[gold.fact_sales] f
+LEFT JOIN [gold.dim_customers] c ON f.customer_key = c.customer_key
+WHERE order_date IS NOT NULL)
+
+/*---------------------------------------------------------------------------
+2. Customer Aggregations: Summariezes key metrics at the customer level
+---------------------------------------------------------------------------------*/
+,customer_aggregation AS
+(SELECT 
+customer_key,
+customer_number,
+customer_name,
+age,
+COUNT(DISTINCT order_number) AS total_orders,
+SUM(sales_amount) As total_sales, 
+SUM(quantity) AS total_quantity,
+COUNT(DISTINCT product_key) AS total_products,
+MAX(order_date) AS last_order_date,
+DATEDIFF(month, MIN(order_date), MAX(order_date)) AS lifespan
+FROM
+	base_query
+GROUP BY 
+customer_key,
+customer_number,
+customer_name,
+age)
+/*---------------------------------------------------------------------------
+2. Final Query: Combines all customer results into one output
+---------------------------------------------------------------------------------*/
+SELECT
+customer_key,
+customer_number,
+customer_name,
+age,
+	CASE WHEN age < 20 THEN 'Under 20'
+		 WHEN age between 20 AND 29 THEN '20-29'
+		 WHEN age between 30 AND 39 THEN '30-39'
+		 WHEN age between 40 AND 49 THEN '40-49'
+		 ELSE '50 and above'
+END AS age_group,
+		
+	CASE 
+		WHEN lifespan >= 12 AND total_sales > 5000 THEN 'VIP'
+		WHEN lifespan >=12 AND total_sales <= 5000 THEN	'Regular'
+		ELSE 'New'
+	END AS customer_segment,
+last_order_date,
+DATEDIFF(month, last_order_date, GETDATE()) AS recency,
+total_orders,
+total_sales, 
+total_quantity,
+total_products,
+lifespan,
+-- Compute average order value (AVO)
+	CASE WHEN  total_sales = 0 THEN 0
+		 ELSE total_sales / total_orders
+	END AS avg_order_value ,
+-- Compute average monthly spend
+CASE WHEN lifespan = 0 THEN total_orders
+	ELSE total_sales / lifespan
+END AS avg_monthly_spend
+FROM
+	customer_aggregation
+
+	-- Average order value = Total Sales/ Total Nr. of Orders
+    -- Average Monthly Spending = Total Sales / Nr. of 
+
+ ```
+![image](https://github.com/user-attachments/assets/f28353c3-e7fd-4732-8b1d-fac843039a12)
+
+# Product Report
+
+## Purpose
+This report consolidates key product metrics and behaviors.
+
+## Highlights
+1. **Data Collection**  
+   - Gathers essential fields such as product name, category, subcategory, and cost.
+
+2. **Product Segmentation**  
+   - Categorizes products based on revenue into **High-Performers, Mid-Range, or Low-Performers**.
+
+3. **Product-Level Metrics**  
+   - **Total Orders**: Count of all transactions involving the product.  
+   - **Total Sales**: Sum of revenue generated.  
+   - **Total Quantity Sold**: Number of units sold.  
+   - **Total Customers**: Unique customers who purchased the product.  
+   - **Lifespan**: Duration of product activity (in months).
+
+4. **Key Performance Indicators (KPIs)**  
+   - **Recency**: Months since the last sale.  
+   - **Average Order Revenue (AOR)**: Total sales divided by total orders.  
+   - **Average Monthly Revenue**: Total sales divided by product lifespan.  
+
+---
+
+### 📌 Notes
+- This report is structured for SQL-based analysis and can be integrated into BI dashboards.  
+- Helps in understanding product performance trends for strategic decision-making.
+
+
+ ```sql
+-- Create Report: gold.report_products
+-- =============================================================================
+IF OBJECT_ID('gold.report_products', 'V') IS NOT NULL
+    DROP VIEW gold.report_products;
+GO
+
+CREATE VIEW gold.report_products AS
+
+/*-------------------------------------------------------------------------------------------------------------------4
+1. Base Query: Retrives core columns from fact_sales and dim_products
+-------------------------------------------------------------------------------------------------------------------*/
+WITH base_query AS
+(SELECT
+	f.order_number,
+	f.order_date,
+	f.customer_key,
+	f.sales_amount,
+	f.quantity,
+	p.product_key,
+	p.product_name,
+	p.category,
+	p.subcategory,
+	p.cost
+FROM [gold.fact_sales] f
+LEFT JOIN
+	[gold.dim_products] p ON f.product_key = p.product_key
+WHERE order_date IS NOT NULL)  -- only consider valid sales dates
+
+
+/*-------------------------------------------------------------------------------------------------------------------4
+1. Product Aggregations: Summarizes key metrics at the product level
+-------------------------------------------------------------------------------------------------------------------*/
+, product_aggregations AS (
+    SELECT
+        product_key,
+        product_name,
+        category,
+        subcategory,
+        AVG(cost) AS avg_cost,  -- Aggregated cost
+        DATEDIFF(MONTH, MIN(order_date), MAX(order_date))  AS lifespan, 
+        MAX(order_date) AS last_sale_date,
+        SUM(sales_amount) AS total_sales,
+        COUNT(DISTINCT order_number) AS total_orders,
+        COUNT(DISTINCT customer_key) AS total_customers,
+        SUM(quantity) AS total_quantity,
+        ROUND(AVG(NULLIF(sales_amount / NULLIF(quantity, 0), 0)), 1) AS avg_selling_price  -- Avoids division by zero
+    FROM
+        base_query
+    GROUP BY
+        product_key, product_name, category, subcategory
+)
+
+
+/*-------------------------------------------------------------------------------------------------------------------4
+1. Final Query: Combines all product results into one output
+-------------------------------------------------------------------------------------------------------------------*/
+SELECT
+    product_key,
+    product_name,
+    category,
+    subcategory,
+    avg_cost,  -- Aggregated cost
+    lifespan, 
+    -- Product Performance Segmentation
+    CASE 
+        WHEN total_sales > 50000 THEN 'High-Performer'
+        WHEN total_sales >= 10000 THEN 'Mid-Range'
+        ELSE 'Low-Performer'
+    END AS product_segment,
+    last_sale_date,
+    total_sales,  
+    total_orders,
+    total_customers,
+    total_quantity,
+    avg_selling_price,  -- Uses already calculated avg_selling_price
+    -- Average Order Revenue (AOR)
+    CASE 
+        WHEN total_orders = 0 THEN 0 
+        ELSE total_sales / NULLIF(total_orders, 0)
+    END AS avg_order_revenue,
+    -- Average Monthly Revenue
+    CASE 
+        WHEN lifespan = 0 THEN NULL 
+        ELSE total_sales / NULLIF(lifespan, 0)
+    END AS avg_monthly_revenue
+FROM
+    product_aggregations;
+```
+![image](https://github.com/user-attachments/assets/636c49e2-4226-4a73-bf26-c0a735a86669)
+
+
+
